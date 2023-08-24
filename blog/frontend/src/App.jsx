@@ -19,7 +19,7 @@ const App = () => {
   const addBlog = async (blogObject) => {
     try {
       const blog = await blogService.create(blogObject)
-      console.log(blog)
+
       setBlogs(blogs.concat(blog))
 
       setNotificationMessage(`Blog "${blog.title}" published!`)
@@ -69,8 +69,24 @@ const App = () => {
     }
   }
 
-  const handleLike = async (blog) => {
-    console.log(`Blog ${blog.id} liked`)
+  const handleLike = async (blogObject) => {
+    try {
+      const updatedBlog = await blogService.update(blogObject.id, { ...blogObject, user: blogObject.user.id, likes: blogObject.likes + 1 })
+
+      setBlogs(blogs.map((blog) => blog.id === blogObject.id ? updatedBlog : blog))
+
+      setNotificationMessage(`Liked "${blogObject.title}"`)
+
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
+    } catch (error) {
+      setErrorMessage(`Something went wrong: ${error.response.data.error}`)
+
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
   }
 
   const loginForm = () => {
