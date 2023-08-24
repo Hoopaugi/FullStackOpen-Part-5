@@ -41,7 +41,9 @@ router.put('/:id', async (request, response) => {
 
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id,  { title, url, author, likes }, { new: true })
 
-  response.json(updatedBlog)
+  const returnedBlog = await updatedBlog.populate('user', { username: 1, name: 1 })
+
+  response.json(returnedBlog)
 })
 
 router.delete('/:id', userExtractor, async (request, response) => {

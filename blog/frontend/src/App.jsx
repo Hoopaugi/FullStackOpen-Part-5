@@ -89,6 +89,29 @@ const App = () => {
     }
   }
 
+  const handleDelete = async (blogObject) => {
+    try {
+      if (blogObject.user.username === user.username && window.confirm(`Remove blog "${blogObject.title}" by ${blogObject.author}`)) {
+        await blogService.remove(blogObject.id)
+
+        setBlogs(blogs.filter(blog => blog.id !== blogObject.id))
+
+        setNotificationMessage(`Blog "${blogObject.title}" deleted`)
+
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
+      }
+    } catch (error) {
+      console.log(error)
+      setErrorMessage(`Something went wrong: ${error.response.data.error}`)
+
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
   const loginForm = () => {
     return (
       <Togglable buttonLabel='login'>
@@ -138,7 +161,9 @@ const App = () => {
           {blogForm()}
         <h2>blogs</h2>
         {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-          <Blog key={blog.id} blog={blog} handleLike={() => handleLike(blog)}/>
+          blog.user.username === user.username
+          ? <Blog key={blog.id} blog={blog} handleLike={() => handleLike(blog)} handleDelete={() => handleDelete(blog)} />
+          : <Blog key={blog.id} blog={blog} handleLike={() => handleLike(blog)} />
         )}
       </div>}
     </div>
