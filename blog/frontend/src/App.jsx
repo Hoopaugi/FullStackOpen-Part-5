@@ -125,7 +125,7 @@ const App = () => {
   const blogForm = () => {
     return (
       <Togglable buttonLabel='new blog' ref={blogFormRef}>
-        <BlogForm 
+        <BlogForm
           createBlog={addBlog}
         />
       </Togglable>
@@ -135,7 +135,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -155,15 +155,15 @@ const App = () => {
       <h1>Blog app</h1>
       <Notification message={notificationMessage} />
       <Notification message={errorMessage} error={true}/>
-      {!user && loginForm()} 
+      {!user && loginForm()}
       {user && <div>
         <span>{user.name} logged in</span><button onClick={handleLogout}>Logout</button>
-          {blogForm()}
+        {blogForm()}
         <h2>blogs</h2>
         {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
           blog.user.username === user.username
-          ? <Blog key={blog.id} blog={blog} handleLike={() => handleLike(blog)} handleDelete={() => handleDelete(blog)} />
-          : <Blog key={blog.id} blog={blog} handleLike={() => handleLike(blog)} />
+            ? <Blog key={blog.id} blog={blog} handleLike={() => handleLike(blog)} handleDelete={() => handleDelete(blog)} />
+            : <Blog key={blog.id} blog={blog} handleLike={() => handleLike(blog)} />
         )}
       </div>}
     </div>

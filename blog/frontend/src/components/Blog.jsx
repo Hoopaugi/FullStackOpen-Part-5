@@ -17,7 +17,7 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
         <button onClick={toggleVisibility}>Show</button>
       </div>
       <div style={showWhenVisible} className='blog'>
-        <span>"{blog.title}" by {blog.author}</span>
+        <span>&quot;{blog.title}&quot; by {blog.author}</span>
         <button onClick={toggleVisibility}>Hide</button>
         <p>{blog.url}</p>
         <p>likes {blog.likes}<button onClick={handleLike}>Like</button></p>
