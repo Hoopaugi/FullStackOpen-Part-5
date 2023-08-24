@@ -5,6 +5,7 @@ import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -17,7 +18,9 @@ const App = () => {
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')  
+  const [url, setUrl] = useState('')
+
+  const [loginVisible, setLoginVisible] = useState(false)
 
   const addBlog = async (event) => {
     event.preventDefault()
@@ -83,25 +86,33 @@ const App = () => {
   }
 
   const loginForm = () => {
-    return <LoginForm 
-      handleLogin={handleLogin}
-      username={username}
-      setUsername={setUsername}
-      password={password} 
-      setPassword={setPassword} 
-    />
+    return (
+      <Togglable buttonLabel='login'>
+        <LoginForm
+          username={username}
+          password={password}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          handleSubmit={handleLogin}
+        />
+      </Togglable>
+    )
   }
 
   const blogForm = () => {
-    return <BlogForm 
-      addBlog={addBlog}
-      title={title}
-      setTitle={setTitle}
-      author={author}
-      setAuthor={setAuthor}
-      url={url}
-      setUrl={setUrl}
-    />
+    return (
+      <Togglable buttonLabel='new blog'>
+        <BlogForm 
+          addBlog={addBlog}
+          title={title}
+          setTitle={setTitle}
+          author={author}
+          setAuthor={setAuthor}
+          url={url}
+          setUrl={setUrl}
+        />
+      </Togglable>
+    )
   }
 
   useEffect(() => {
