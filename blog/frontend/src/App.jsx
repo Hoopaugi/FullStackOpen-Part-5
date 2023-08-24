@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -14,6 +14,8 @@ const App = () => {
   const [notificationMessage, setNotificationMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
+  const blogFormRef = useRef()
+
   const addBlog = async (blogObject) => {
     try {
       const blog = await blogService.create(blogObject)
@@ -21,6 +23,7 @@ const App = () => {
       setBlogs(blogs.concat(blog))
 
       setNotificationMessage(`Blog "${blog.title}" published!`)
+      blogFormRef.current.toggleVisibility()
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
@@ -78,7 +81,7 @@ const App = () => {
 
   const blogForm = () => {
     return (
-      <Togglable buttonLabel='new blog'>
+      <Togglable buttonLabel='new blog' ref={blogFormRef}>
         <BlogForm 
           createBlog={addBlog}
         />
