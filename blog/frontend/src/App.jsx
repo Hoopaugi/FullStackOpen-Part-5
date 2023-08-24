@@ -19,7 +19,7 @@ const App = () => {
   const addBlog = async (blogObject) => {
     try {
       const blog = await blogService.create(blogObject)
-
+      console.log(blog)
       setBlogs(blogs.concat(blog))
 
       setNotificationMessage(`Blog "${blog.title}" published!`)

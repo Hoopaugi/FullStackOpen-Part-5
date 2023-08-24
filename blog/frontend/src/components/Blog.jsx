@@ -17,11 +17,11 @@ const Blog = ({ blog, handleLike }) => {
         <button onClick={toggleVisibility}>Show</button>
       </div>
       <div style={showWhenVisible} className='blog'>
-        <span>{blog.title}</span>
+        <span>"{blog.title}" by {blog.author}</span>
         <button onClick={toggleVisibility}>Hide</button>
         <p>{blog.url}</p>
         <p>likes {blog.likes}<button onClick={handleLike}>Like</button></p>
-        <p>{blog.author}</p>
+        <p>{blog.user.name}</p>
       </div>
     </div>
   )
