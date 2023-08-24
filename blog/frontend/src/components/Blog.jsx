@@ -13,7 +13,7 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
   return (
     <div>
       <div style={hideWhenVisible}>
-        <span>{blog.title}</span>
+        <span>&quot;{blog.title}&quot; by {blog.author}</span>
         <button onClick={toggleVisibility}>Show</button>
       </div>
       <div style={showWhenVisible} className='blog'>
