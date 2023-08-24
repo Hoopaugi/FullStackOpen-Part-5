@@ -9,30 +9,16 @@ import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   const [notificationMessage, setNotificationMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-
-  const [loginVisible, setLoginVisible] = useState(false)
-
-  const addBlog = async (event) => {
-    event.preventDefault()
-
+  const addBlog = async (blogObject) => {
     try {
-      const blog = await blogService.create({ title, author, url })
+      const blog = await blogService.create(blogObject)
 
       setBlogs(blogs.concat(blog))
-
-      setTitle('')
-      setAuthor('')
-      setUrl('')
 
       setNotificationMessage(`Blog "${blog.title}" published!`)
       setTimeout(() => {
@@ -62,23 +48,18 @@ const App = () => {
     }, 5000)
   }
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    
+  const handleLogin = async (loginObject) => {
     try {
-      const user = await loginService.login({ username, password })
+      const user = await loginService.login(loginObject)
 
       window.localStorage.setItem('loggedInUser', JSON.stringify(user))
 
       blogService.setToken(user.token)
 
       setUser(user)
-
-      setUsername('')
-      setPassword('')
     } catch (exception) {
       setErrorMessage('Wrong credentials')
-      setPassword('')
+
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -89,11 +70,7 @@ const App = () => {
     return (
       <Togglable buttonLabel='login'>
         <LoginForm
-          username={username}
-          password={password}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
-          handleSubmit={handleLogin}
+          login={handleLogin}
         />
       </Togglable>
     )
@@ -103,13 +80,7 @@ const App = () => {
     return (
       <Togglable buttonLabel='new blog'>
         <BlogForm 
-          addBlog={addBlog}
-          title={title}
-          setTitle={setTitle}
-          author={author}
-          setAuthor={setAuthor}
-          url={url}
-          setUrl={setUrl}
+          createBlog={addBlog}
         />
       </Togglable>
     )
