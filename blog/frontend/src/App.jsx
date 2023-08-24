@@ -36,7 +36,7 @@ const App = () => {
         setNotificationMessage(null)
       }, 5000)
     } catch (error) {
-      setErrorMessage(`Something went wrong: ${error.message}`)
+      setErrorMessage(`Something went wrong: ${error.response.data.error}`)
 
       setTimeout(() => {
         setErrorMessage(null)
@@ -44,11 +44,28 @@ const App = () => {
     }
   }
 
+  const handleLogout = async (event) => {
+    event.preventDefault()
+
+    window.localStorage.removeItem('loggedInUser')
+
+    blogService.setToken(null)
+
+    setUser(null)
+
+    setNotificationMessage('Logged out')
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000)
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
     
     try {
       const user = await loginService.login({ username, password })
+
+      window.localStorage.setItem('loggedInUser', JSON.stringify(user))
 
       blogService.setToken(user.token)
 
@@ -93,20 +110,32 @@ const App = () => {
     )  
   }, [])
 
+  useEffect(() => {
+    const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
+
+    if (loggedInUserJSON) {
+      const loggedInUser = JSON.parse(loggedInUserJSON)
+
+      setUser(loggedInUser)
+
+      blogService.setToken(loggedInUser.token)
+    }
+  }, [])
+
   return (
     <div>
+      <h1>Blog app</h1>
       <Notification message={notificationMessage} />
-      <Notification message={errorMessage} />
+      <Notification message={errorMessage} error={true}/>
       {!user && loginForm()} 
       {user && <div>
-        <p>{user.name} logged in</p>
+        <span>{user.name} logged in</span><button onClick={handleLogout}>Logout</button>
           {blogForm()}
-        </div>
-      }
-      <h2>blogs</h2>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+        <h2>blogs</h2>
+        {blogs.map(blog =>
+          <Blog key={blog.id} blog={blog} />
+        )}
+      </div>}
     </div>
   )
 }
